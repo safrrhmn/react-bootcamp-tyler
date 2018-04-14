@@ -32,12 +32,21 @@
 
             this.state = {
                 friendsList : ['jason','raghav','Mark'],
+                input:'',
             }
-            this.handleRemoveFriend=this.handleRemoveFriend.bind(this);
+            this.handleRemoveFriend=this.handleRemoveFriend.bind(this); 
+            this.updateInput=this.updateInput.bind(this);
+            this.handleAddFriend=this.handleAddFriend.bind(this);
         }
 
         handleAddFriend(){
-
+            if(this.state.friendsList.includes(this.state.input) || this.state.input === "") return;
+            this.setState((currentState)=>{
+                return {
+                    friendsList: currentState.friendsList.concat([this.state.input]),
+                    input:''
+                };
+            });
         }
 
         handleRemoveFriend(name){
@@ -48,9 +57,22 @@
             });
         }
 
+        updateInput(e){
+            const value = e.target.value;
+            this.setState((currentState)=>({
+                input : value
+            }));
+        }
+
         render(){
             return(
                 <div id='container'>
+                    <input
+                    placeholder="Type name"
+                    value={this.state.input}
+                    onChange={this.updateInput}
+                    />
+                    <button onClick={this.handleAddFriend}>Add Friend</button>
                     <FriendsListBuilder list = {this.state.friendsList} 
                     onRemoveFriend = {this.handleRemoveFriend}
                     />
