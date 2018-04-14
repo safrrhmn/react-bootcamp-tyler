@@ -1,0 +1,63 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>FriendsBuilder</title>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src='https://unpkg.com/babel-standalone@6/babel.min.js'></script>
+</head>
+
+<body id="app">
+    <script type="text/babel">
+
+    function FriendsListBuilder(props){
+        return (
+            <ul>
+                {props.list.map((name)=>(
+                    <li key={name}>{name}</li>
+                ))}
+            </ul>
+        );
+    }
+
+    class App extends React.Component{
+        constructor(props){
+            super(props)
+
+            this.state = {
+                friendsList : ['jason','raghav','Mark'],
+            }
+        }
+
+        handleAddFriend(){
+
+        }
+
+        handleRemoveFriend(name){
+            this.setState((currentState)=>{
+                return {
+                    friendsList : currentState.friendsList.filter((friend) =>friend !===name);
+                };
+            });
+        }
+
+        render(){
+            return(
+                <div id='container'>
+                    <FriendsListBuilder list={this.state.friendsList} />
+                </div>
+            );
+        }
+    }
+
+    ReactDOM.render(
+        <App />, 
+        document.getElementById('app')
+    );
+    </script>
+</body>
+
+</html>
