@@ -13,19 +13,40 @@
 <body id="app">
     <script type="text/babel">
 
-    function FriendsListBuilder(props) {
-        return (
-            <ul>
-            {props.list.map(friend => (
-                <li key={friend.name}>
-                <span>{friend.name}</span>
-                <button onClick={() => props.onRemoveFriend(friend.name)}>
-                    Remove
-                </button>
-                </li>
-            ))}
-            </ul>
-        );
+        function ActiveFriends(props){
+            return (
+                <div>
+                    <h2>Active Friends</h2>
+                    <ul>
+                        {props.list.map(friend => (
+                            <li key={friend.name}>
+                            <span>{friend.name}</span>
+                            <button onClick={()=>props.onRemoveFriends(friend.name)}>
+                                Remove
+                            </button>
+                            <button onClick={()=>props.onToggleFrined(friend.name)}>Deactivate Friend</button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                
+            );
+        }
+
+        function InactiveFriends(props){
+            return (
+                <div>
+                    <h2>Inactive Friends</h2>
+                    <ul>
+                        {props.list.map(friend => (
+                            <li key={friend.name}>
+                            <span>{friend.name}</span>
+                            <button onClick={()=>props.onToggleFrined(friend.name)}>Active Friend</button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            );
         }
 
         class App extends React.Component {
@@ -53,6 +74,7 @@
             this.handleRemoveFriend = this.handleRemoveFriend.bind(this);
             this.updateInput = this.updateInput.bind(this);
             this.handleAddFriend = this.handleAddFriend.bind(this);
+            this.handleToggleFriends=this.handleToggleFriends.bind(this);
         }
 
         handleAddFriend() {
@@ -96,6 +118,21 @@
             }));
         }
 
+        handleToggleFriends(name){
+
+            this.setState((currentState)=>{
+                const friend = currentState.friendsList.find((friend)=>friend.name===name);
+                return {
+                    friendsList: currentState.friendsList.filter((friend)=>friend.name!==name)
+                    .concat([{
+                        name: friend.name,
+                        active: !friend.active
+                    }])
+                };
+            });
+        }
+
+
         render() {
             return (
                     <div id="container">
@@ -108,9 +145,14 @@
                         <button onClick={() => this.setState({ friendsList: [] })}>
                         Clear Friends
                         </button>
-                        <FriendsListBuilder
-                        list={this.state.friendsList}
-                        onRemoveFriend={this.handleRemoveFriend}
+                        <ActiveFriends
+                            list={this.state.friendsList.filter((friend)=>friend.active===true)}
+                            onRemoveFriends = {this.handleRemoveFriend}
+                            onToggleFrined={this.handleToggleFriends}
+                        />
+                        <InactiveFriends
+                            list={this.state.friendsList.filter((friend)=>friend.active===false )}
+                            onToggleFrined={this.handleToggleFriends}
                         />
                     </div>
                 );
